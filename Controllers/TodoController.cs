@@ -25,8 +25,13 @@ public class TodoController : Controller
         return View();
     }
 
+    public IActionResult Create()
+    {
+        return View();
+    }
+    
     [HttpPost]
-    public IActionResult Index(TodoVm vm)
+    public IActionResult Create(TodoVm vm)
     {
         if (ModelState.IsValid)
         {
