@@ -1,9 +1,10 @@
 ﻿using TodoApplication.Models;
+using System.Collections.Generic;
 
-namespace TodoApplication.Data;
-
-public static class Database
+namespace TodoApplication.Data
 {
-    public static List<TodoDto> Todos = [];
-    
+    public static class Database
+    {
+        public static List<TodoDto> Todos { get; set; } = new List<TodoDto>(); 
+    }
 }

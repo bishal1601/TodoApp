@@ -1,10 +1,28 @@
-﻿@model List<TodoDto>
+﻿@model TodoApplication.Models.TodoDto
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Edit Todo";
     Layout = "_Layout";
 }
-<h1>Update</h1>
+
+<h1>Edit Todo</h1>
+
 <form method="post">
-    
+    <input type="hidden" asp-for="Id" />
+
+    <div>
+        <label asp-for="TaskTitle"></label>
+        <input type="text" asp-for="TaskTitle" />
+    </div>
+
+    <div>
+        <label asp-for="TaskDescription"></label>
+        <input type="text" asp-for="TaskDescription" />
+    </div>
+
+    <div>
+        <input type="hidden" asp-for="TaskDate" />
+    </div>
+
+    <button type="submit">Update</button>
 </form>

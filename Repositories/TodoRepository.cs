@@ -1,4 +1,7 @@
-﻿using TodoApplication.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using TodoApplication.Data;
 using TodoApplication.Models;
 using TodoApplication.Repositories.Interfaces;
 
@@ -8,14 +11,21 @@ namespace TodoApplication.Repositories
     {
         public List<TodoDto> GetAll()
         {
-            var todos = Database.Todos.ToList();
-            return todos;
+            return Database.Todos.ToList();
         }
 
-        public List<TodoDto> GetbyId(Guid id)
+        public TodoDto GetbyId(Guid id)
         {
-            var todos = Database.Todos.ToList();
-            return todos;
+            return Database.Todos.FirstOrDefault(t => t.Id == id);
+        }
+
+        public void Delete(Guid id)
+        {
+            var todo = Database.Todos.FirstOrDefault(t => t.Id == id);
+            if (todo != null)
+            {
+                Database.Todos.Remove(todo);
+            }
         }
     }
 }

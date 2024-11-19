@@ -30,8 +30,8 @@ else
                     <p class="todo-date text-muted">@item.TaskDate.ToString("MM/dd/yyyy")</p>
                     <p class="todo-description">@item.TaskDescription</p>
                 </div>
-                <a asp-action="/todo/update/@item.Id"><button>Update</button></a>
-                <a asp-action="/todo/delete/@item.Id"><button>delete</button></a>
+                <a asp-controller="Todo" asp-action="Update" asp-route-id="@item.Id"><button>Update</button></a>
+                <a asp-controller="Todo" asp-action="Delete" asp-route-id="@item.Id"><button>delete</button></a>
             </div>
         }
     </div>

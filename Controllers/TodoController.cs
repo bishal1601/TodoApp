@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TodoApplication.Data;
 using TodoApplication.Models;
 using TodoApplication.Repositories.Interfaces;
 using TodoApplication.Services.Interfaces;
@@ -27,13 +28,19 @@ public class TodoController : Controller
     [HttpPost]
     public IActionResult Index(TodoVm vm)
     {
-        var dto = new TodoDto();
-        dto.TaskTitle = vm.TaskTitle;
-        dto.TaskDescription = vm.TaskDescription;
-        _todoService.Create(dto);
+        if (ModelState.IsValid)
+        {
+            var dto = new TodoDto
+            {
+                TaskTitle = vm.TaskTitle,
+                TaskDescription = vm.TaskDescription
+            };
+            _todoService.Create(dto); 
 
-        return RedirectToAction("Index");
-        
+            return RedirectToAction("GetTodos"); 
+        }
+
+        return View(vm); 
     }
     
     public IActionResult GetTodos()
@@ -42,16 +49,44 @@ public class TodoController : Controller
         return View(todos);
     }
 
-    public IActionResult Update(Guid getid)
+    public IActionResult Update(Guid id)
     {
-        var id = getid;
-        
-        var todos = _todoRepository.GetbyId(id);
-        return View(todos);
+        var todo = _todoRepository.GetbyId(id);
+
+        if (todo == null)
+        {
+            return NotFound();
+        }
+
+       
+        return View((TodoDto)todo);
     }
+    [HttpPost]
+    public IActionResult Update(TodoDto dto)
+    {
+        if (ModelState.IsValid)
+        {
+            _todoService.Update(dto);
+            return RedirectToAction("GetTodos");
+        }
+
+        return View(dto); 
+    }
+
+    
 
     public IActionResult Delete(Guid id)
     {
-        return RedirectToAction("GetTodos");
+        var todo = Database.Todos.FirstOrDefault(t => t.Id == id);
+        if (todo != null)
+        {
+            Database.Todos.Remove(todo);
+            return RedirectToAction("GetTodos");
+        }
+        else
+        {
+            return NotFound();
+        }
+        
     }
 }
