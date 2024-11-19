@@ -4,125 +4,193 @@
     Layout = "_Layout";
 }
 
-<h1 class="text-center my-5 text-primary">Todo List</h1>
-
-@if (!Model.Any())
-{
-    <div class="alert alert-info text-center">
-        <strong>No todos available.</strong>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="page-title">Todo List</h1>
+        <a asp-controller="Todo" asp-action="Index">
+            <button class="btn btn-gradient">+ Add</button>
+        </a>
     </div>
-}
-else
-{
-    <div class="todo-list">
-        @foreach (var item in Model)
-        {
-            <div class="todo-item">
-                <!-- Todo status with checkbox -->
-                <div class="todo-status">
-                    <input type="checkbox" @(item.Status ? "checked" : "") onchange="updateStatus(@item.Id, this)" />
-                    <label>@(item.Status ? "Completed" : "Mark as Complete")</label>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <strong>No todos available.</strong>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="todo-card">
+                        <div class="todo-status">
+                            <input type="checkbox"
+                                   @(item.Status ? "checked" : "")
+                                   onchange="updateStatus(@item.Id, this)"
+                                   class="form-check-input me-2" />
+                            <span class="status-label @(item.Status ? "completed" : "pending")">
+                                @(item.Status ? "✔ Completed" : "● Pending")
+                            </span>
+                        </div>
+                        <div class="todo-details">
+                            <h5 class="todo-title">@item.TaskTitle</h5>
+                            <p class="todo-date">@item.TaskDate.ToString("MMMM dd, yyyy")</p>
+                            <p class="todo-description">@item.TaskDescription</p>
+                        </div>
+                        <div class="todo-actions">
+                            <a asp-controller="Todo" asp-action="Update" asp-route-id="@item.Id"
+                               class="btn btn-update">Update</a>
+                            <a asp-controller="Todo"
+                               asp-action="Delete"
+                               asp-route-id="@item.Id"
+                               onclick="return confirmDelete();"
+                               class="btn btn-delete">Delete</a>
+                        </div>
+                    </div>
                 </div>
+            }
+        </div>
+    }
+</div>
 
-                <!-- Todo details -->
-                <div class="todo-details">
-                    <h5 class="todo-title">@item.TaskTitle</h5>
-                    <p class="todo-date text-muted">@item.TaskDate.ToString("MM/dd/yyyy")</p>
-                    <p class="todo-description">@item.TaskDescription</p>
-                </div>
-                <a asp-controller="Todo" asp-action="Update" asp-route-id="@item.Id"><button>Update</button></a>
-                <a asp-controller="Todo" asp-action="Delete" asp-route-id="@item.Id"><button>delete</button></a>
-            </div>
-        }
-    </div>
-}
-
-
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this todo?");
+    }
+</script>
 
 <style>
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f7f7f7;
-    color: #333;
-}
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(to bottom, #f8f9fa, #e8ecef);
+        color: #444;
+        margin: 0;
+        padding: 0;
+    }
 
-h1 {
-    font-size: 2.5rem;
-    color: #007bff;
-    font-weight: 700;
-}
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #444;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-/* Todo List Container */
-.todo-list {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-}
+    .btn-gradient {
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #fff;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        border: none;
+        border-radius: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-/* Each Todo Item Styling */
-.todo-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    background-color: white;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+    .btn-gradient:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
 
-.todo-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-}
+    .todo-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
 
-/* Todo Status (Checkbox) */
-.todo-status {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin-right: 20px;
-}
+    .todo-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
 
-.todo-status input[type="checkbox"] {
-    margin-right: 10px;
-    transform: scale(1.2);
-}
+    .todo-status {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
 
-.todo-status label {
-    font-size: 1rem;
-    font-weight: 500;
-}
+    .status-label {
+        font-size: 0.9rem;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 12px;
+        margin-left: 10px;
+    }
 
-/* Todo Details */
-.todo-details {
-    flex-grow: 1;
-    margin-left: 20px;
-}
+    .status-label.completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
 
-.todo-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
-    color: #333;
-}
+    .status-label.pending {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
 
-.todo-date {
-    font-size: 0.9rem;
-    color: #888;
-    margin-top: 5px;
-}
+    .todo-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 10px;
+    }
 
-.todo-description {
-    font-size: 1rem;
-    color: #555;
-    margin-top: 15px;
-}
+    .todo-date {
+        font-size: 0.9rem;
+        color: #888;
+    }
 
-/* Alert Styling */
-.alert {
-    margin-top: 20px;
-    font-size: 1rem;
-}
+    .todo-description {
+        font-size: 1rem;
+        color: #666;
+        margin-top: 10px;
+    }
+
+    .todo-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn-update, .btn-delete {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+        border-radius: 30px;
+        transition: background 0.2s, transform 0.2s;
+        font-weight: bold;
+    }
+
+    .btn-update {
+        background-color: #ffc107;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-update:hover {
+        background-color: #e0a800;
+        transform: scale(1.05);
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+        transform: scale(1.05);
+    }
+
+    .alert {
+        font-size: 1rem;
+        padding: 15px;
+        border-radius: 12px;
+        background-color: #eaf4ff;
+        color: #007bff;
+        border: 1px solid #bee3ff;
+    }
 </style>
