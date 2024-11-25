@@ -25,7 +25,8 @@ namespace TodoApplication.Services
             {
                 existingTodo.TaskTitle = dto.TaskTitle;
                 existingTodo.TaskDescription = dto.TaskDescription;
-                existingTodo.TaskDate = dto.TaskDate; 
+                existingTodo.TaskDate = dto.TaskDate;
+                existingTodo.Status = dto.Status;
             }
             else
             {
@@ -45,6 +46,28 @@ namespace TodoApplication.Services
             {
                 throw new InvalidOperationException("Todo not found.");
             }
+        }
+
+        public void UpdateStatus(Guid id)
+        {
+            var existingTodo = Database.Todos.FirstOrDefault(todo => todo.Id == id);
+            if (existingTodo != null)
+            {
+                if (existingTodo.Status == true)
+                {
+                    existingTodo.Status = false;
+                }
+                else
+                {
+                    existingTodo.Status = true;
+                }
+                
+            }
+            else
+            {
+                throw new InvalidOperationException("Todo not found.");
+            }
+
         }
     }
 }

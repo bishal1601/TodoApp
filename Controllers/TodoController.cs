@@ -82,10 +82,10 @@ public class TodoController : Controller
 
     public IActionResult Delete(Guid id)
     {
-        var todo = Database.Todos.FirstOrDefault(t => t.Id == id);
-        if (todo != null)
+        
+        if (id != null)
         {
-            Database.Todos.Remove(todo);
+            _todoService.Delete(id);
             return RedirectToAction("GetTodos");
         }
         else
@@ -94,4 +94,16 @@ public class TodoController : Controller
         }
         
     }
+    
+    public IActionResult TodoStatus(Guid id)
+    {
+        if (id!=null)
+        {
+            _todoService.UpdateStatus(id);
+        }
+
+        return RedirectToAction("GetTodos");
+    }
+    
+
 }

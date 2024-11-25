@@ -10,4 +10,8 @@
       <_ContentIncludedByDefault Remove="Views\Todo\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="wwwroot\Custom_Scripts\AddCheckBoxListener.js" />
+    </ItemGroup>
+
 </Project>
